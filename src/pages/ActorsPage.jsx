@@ -38,6 +38,14 @@ export default function ActorsPage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!successMessage) return;
+    const timer = setTimeout(() => {
+      setSuccessMessage(null);
+    }, 4000);
+    return () => clearTimeout(timer);
+  }, [successMessage]);
+
   const handleDeleteClick = async (actor) => {
     const confirmed = window.confirm(`¿Está seguro de que desea eliminar a "${actor.name}"?`);
     if (!confirmed) return;
@@ -76,8 +84,32 @@ export default function ActorsPage() {
         </div>
       </header>
 
-      {error && <div className="alert alert-danger">{error}</div>}
-      {successMessage && <div className="alert alert-success">{successMessage}</div>}
+      {error && (
+        <div className="alert alert-danger">
+          <span>{error}</span>
+          <button
+            type="button"
+            className="alert-close"
+            onClick={() => setError(null)}
+            aria-label="Cerrar"
+          >
+            ×
+          </button>
+        </div>
+      )}
+      {successMessage && (
+        <div className="alert alert-success">
+          <span>{successMessage}</span>
+          <button
+            type="button"
+            className="alert-close"
+            onClick={() => setSuccessMessage(null)}
+            aria-label="Cerrar"
+          >
+            ×
+          </button>
+        </div>
+      )}
 
       {!loading && actors.length > 0 && (
         <div style={{ marginBottom: '1.25rem', maxWidth: '360px' }}>
